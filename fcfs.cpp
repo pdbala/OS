@@ -1,3 +1,76 @@
+// EASY ONE 
+#include <bits/stdc++.h>
+using namespace std;
+
+class Process {
+public:
+	int at;
+	int bt;
+	int ct;
+	int tat;
+	int wt;
+	int pid;
+
+	void update_after_ct()
+	{
+		tat = ct - at;
+		wt = tat - bt;
+	}
+
+	void display()
+	{
+		printf("%d\t%d\t%d\t%d\t%d\t%d\n", pid, at, bt, ct,
+			tat, wt);
+	}
+};
+
+float average(vector<Process> P)
+{
+	int total = 0;
+	for (auto temp : P) {
+		total += temp.wt;
+	}
+	return (float)total / P.size();
+}
+
+int main()
+{
+	int n;
+	cin >> n;
+	int counter = 0;
+	vector<Process> P(n);
+
+	for(int i=0;i<P.size();i++){
+	    P[i].pid =counter++;
+	    cin >> P[i].at>>P[i].bt;
+	}
+	sort(P.begin(), P.end(),
+		[](Process first, Process second) {
+			return first.at < second.at;
+		});
+	printf("pid\tat\tbt\tct\ttat\twt\n");
+	P[0].ct = P[0].at + P[0].bt;
+	P[0].update_after_ct();
+	P[0].display();
+	for (int i = 1; i < P.size(); i++) {
+    //clash
+		if (P[i].at < P[i - 1].ct) {
+			P[i].ct = P[i - 1].ct + P[i].bt;
+		}
+    //no clash
+		else {
+//   	printf("curr['at'] : %d, prev['ct'] : %d\n",P[i].at, P[i - 1].ct);
+			P[i].ct = P[i].at + P[i].bt;
+		}
+		P[i].update_after_ct();
+		P[i].display();
+	}
+
+	printf("Average waiting time : %f\n", average(P));
+	return 0;
+}
+
+
 #include<iostream>
 #include<vector>
 using namespace std;
