@@ -1,3 +1,68 @@
+//EASY ONE
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Proc{
+public:
+    int pid;
+    int at;
+    int bt;
+    int ct;
+    int tat;
+    int wt;
+    
+    void update(){
+        this->tat = this->ct - this->at;
+        this->wt = this->tat - this->bt;
+    }
+    
+    void display(){
+        cout << this->pid << " " << this->at << "  " << this->bt << "  " << this->ct << "  " << this->tat << "  " << this->wt << endl;
+    }
+};
+
+bool compareByBurstTime(const Proc &a, const Proc &b){
+    return a.bt < b.bt;
+}
+
+int main(){
+    int n;
+    cin >> n;
+    
+    vector<Proc> P(n);
+    
+    for(int i = 0; i < n; i++){
+        P[i].pid = i + 1;
+        cin >> P[i].at >> P[i].bt;
+    }
+    
+    sort(P.begin(), P.end(), [](Proc first, Proc second){ return first.at < second.at; });
+    
+    cout << " AT  " << "BT " << "CT " << "TAT  " << "WT  " << endl;
+    
+    P[0].ct = P[0].at + P[0].bt;
+    P[0].update();
+    
+    for(int i = 1; i < n; i++){
+        sort(P.begin() + i, P.end(), compareByBurstTime); // Sort processes by burst time starting from i-th position
+        
+        // Process with the shortest burst time goes next
+        P[i].ct = P[i - 1].ct + P[i].bt;
+        P[i].update();
+    }
+    sort(P.begin(),P.end(),[](Proc first,Proc Sec){
+        return first.pid<Sec.pid;
+    });
+    
+    for(int i=0;i<n;i++){
+          P[i].display();
+    }
+    return 0;
+}
+
+//LONG ONE
 #include<iostream>
 using namespace std;
 
